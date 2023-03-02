@@ -114,6 +114,10 @@ img3 = "result/ejemplo1.png"
 cat(paste0('<center><img src="', img3,'" width="200" height="200" alt=""></center>')) 
 ```
 
+ggarrange(p3, ggarrange(p1, p2, labels =c("b", "c"), nrow=2),
+
+labels = "a", ncol=2)
+
 ```{r pressure, echo=FALSE, warning=FALSE, fig.height=8}
 ## Read dataset Palmer Penguins
 pinguinos = penguins
@@ -175,12 +179,37 @@ img4 = "result/ejercicio1.png"
 cat(paste0('<center><img src="', img4,'" width="200" height="200" alt=""></center>')) 
 ```
 
-```{r p1.1, echo=TRUE, warning=FALSE, fig.height=8}
-# Escriba aquí su código
+-   Grafico 4
 
+```{r}
+p4=  pinguinos %>% ggplot(aes(x= body_mass_g, y =flipper_length_mm, color = factor(sex)))+  geom_point(size=0.5, alpha=0.5) + geom_smooth(method = "lm", se = FALSE, na.rm = TRUE) +
+  facet_grid(factor(species)~factor(island)) + theme_classic() + theme(legend.position = "none") +
+  stat_poly_eq(coef.digits = 2,use_label(c("eq", "adj.R2")), formula = y ~ poly(x,1, raw = TRUE), 
+               label.x.npc = 0, label.y.npc = 1.0) +
+  labs(x = "Masa corporal en gramos", y = "Longitud de la aleta en mm")
+p4
 ```
 
-**INTERPRETACIÓN**
+-   Grafico 5
+
+```{r}
+library(ggcorrplot)
+data(pinguinos)
+corr <- round(cor(pinguinos[, c(3,4,5,6)]), 1)
+head(corr[, 1:4])
+p5 =ggcorrplot(corr, hc.order = TRUE, type = "lower",
+     outline.col = "white")
+p5
+```
+
+```{r}
+ggarrange(p3, ggarrange(p5, p4, nrow=2), p1, p2 
+          , ncol=2, nrow=3)
+```
+
+-   Interpretacion
+
+Se puede ver que existe variaciones en cada una de las especies y dependiendo de las islas donde se encuentran el pico y la masa corporal cambia
 
 # [4.0 PUNTOS] 2. MAPAS DE CALOR DE EXPRESIÓN GÉNICA
 
